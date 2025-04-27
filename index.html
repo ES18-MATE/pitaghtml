@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📐 Teorema de Pitágoras</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Apply Inter font globally */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom styles for better visual separation */
+        .section-divider {
+            border-top: 1px solid #e5e7eb; /* gray-200 */
+            margin-top: 2rem; /* mt-8 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        /* Style for input fields */
+        input[type=number] {
+            appearance: textfield; /* Hides default arrows in some browsers */
+            -moz-appearance: textfield;
+        }
+        /* Style for radio buttons */
+        input[type=radio] {
+            accent-color: #3b82f6; /* blue-500 */
+        }
+        /* Canvas styling */
+        canvas {
+            display: block;
+            margin: 1rem auto; /* Center canvas */
+            border: 1px solid #d1d5db; /* gray-300 */
+            border-radius: 0.5rem; /* rounded-lg */
+        }
+        /* Error message styling */
+        .error-message {
+            color: #ef4444; /* red-500 */
+            font-size: 0.875rem; /* text-sm */
+            margin-top: 0.5rem; /* mt-2 */
+        }
+        /* Highlight calculated value */
+        .calculated-value {
+            color: #10b981; /* emerald-500 */
+            font-weight: 600; /* font-semibold */
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 p-4 md:p-8">
+
+    <div class="max-w-6xl mx-auto bg-white p-6 md:p-10 rounded-xl shadow-lg">
+        <header class="text-center mb-12 px-4 md:px-6 py-8 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl shadow-sm">
+            <div class="max-w-3xl mx-auto">
+                <!-- Icono decorativo -->
+                <div class="mb-5 inline-block p-4 bg-white rounded-full shadow-lg">
+                    <svg class="w-12 h-12 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                </div>
+        
+                <h1 class="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 mb-4">
+                    📐 Teorema de Pitágoras
+                </h1>
+        
+                <div class="prose prose-lg max-w-none text-gray-600 mb-6">
+                    <p class="text-lg leading-relaxed">
+                        Esta herramienta interactiva te permite explorar y aplicar el famoso teorema que establece:
+                    </p>
+                    
+                    <!-- Tarjeta destacada del teorema -->
+                    <div class="mt-4 p-6 bg-white border-l-4 border-blue-600 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                        <p class="text-xl font-semibold text-gray-800 mb-3">
+                            En todo triángulo rectángulo:
+                        </p>
+                        <div class="text-3xl font-bold text-blue-600">
+                            a² + b² = c²
+                        </div>
+                    </div>
+                </div>
+        
+                <!-- Lista de elementos con iconos -->
+                <div class="flex flex-col sm:flex-row justify-center gap-6 mt-8">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                            <span class="text-blue-600">a</span>
+                        </div>
+                        <span class="text-gray-700">Cateto adyacente</span>
+                    </div>
+                    
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center">
+                            <span class="text-indigo-600">b</span>
+                        </div>
+                        <span class="text-gray-700">Cateto opuesto</span>
+                    </div>
+                    
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
+                            <span class="text-purple-600">c</span>
+                        </div>
+                        <span class="text-gray-700">Hipotenusa</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+
+            <section class="bg-gray-100 p-6 rounded-lg shadow-sm">
+                <h2 class="text-xl font-semibold mb-4 text-gray-700">1. Ingresa los valores</h2>
+
+                <div class="mb-5">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">¿Qué lado del triángulo deseas calcular?</label>
+                    <div class="flex flex-col sm:flex-row sm:space-x-4 space-y-2 sm:space-y-0">
+                        <label class="flex items-center space-x-2 cursor-pointer">
+                            <input type="radio" name="sideToCalculate" value="c" checked class="form-radio">
+                            <span>Hipotenusa (c)</span>
+                        </label>
+                        <label class="flex items-center space-x-2 cursor-pointer">
+                            <input type="radio" name="sideToCalculate" value="a" class="form-radio">
+                            <span>Cateto (a)</span>
+                        </label>
+                        <label class="flex items-center space-x-2 cursor-pointer">
+                            <input type="radio" name="sideToCalculate" value="b" class="form-radio">
+                            <span>Cateto (b)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div id="input-fields" class="space-y-4">
+                    </div>
+                <div id="error-message-input" class="error-message"></div>
+            </section>
+
+            <section>
+                <div class="bg-blue-50 p-6 rounded-lg shadow-sm mb-6">
+                    <h2 class="text-xl font-semibold mb-4 text-blue-700">2. Solución paso a paso</h2>
+                    <div id="solution-steps" class="text-sm space-y-1 text-gray-700">
+                        Selecciona qué lado calcular e ingresa los valores conocidos.
+                    </div>
+                    <div id="error-message-calculation" class="error-message"></div>
+                </div>
+
+                <div class="bg-green-50 p-6 rounded-lg shadow-sm">
+                    <h2 class="text-xl font-semibold mb-4 text-green-700">3. Representación visual</h2>
+                    <canvas id="triangleCanvas" width="300" height="300"></canvas>
+                     <p id="canvas-message" class="text-center text-sm text-gray-500 mt-2"></p>
+                </div>
+            </section>
+        </div>
+
+        <section class="mt-10 pt-6 border-t border-gray-200">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-700">Información adicional</h2>
+            <div class="space-y-4 text-gray-600">
+                <div>
+                    <h3 class="text-lg font-medium mb-1">¿Qué es el Teorema de Pitágoras?</h3>
+                    <p>El Teorema de Pitágoras es una relación fundamental en geometría euclidiana que establece que en un triángulo rectángulo, el cuadrado de la longitud de la hipotenusa es igual a la suma de los cuadrados de las longitudes de los otros dos lados (catetos).</p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-medium mb-1">Aplicaciones prácticas</h3>
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Arquitectura y construcción</li>
+                        <li>Navegación</li>
+                        <li>Cartografía</li>
+                        <li>Física</li>
+                        <li>Ingeniería</li>
+                        <li>Diseño gráfico</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-medium mb-1">Historia</h3>
+                    <p>El teorema lleva el nombre del matemático griego Pitágoras (c. 570-495 a.C.), aunque hay evidencia de que civilizaciones anteriores como los babilonios y los egipcios ya conocían relaciones similares.</p>
+                </div>
+            </div>
+        </section>
+
+        <footer class="mt-10 pt-6 border-t border-gray-200 text-center text-sm text-gray-500">
+            Desarrollado con ❤️ para ayudar a estudiantes a entender el Teorema de Pitágoras
+            Profesor Alberto Aguirre ES-18 
+        </footer>
+
+    </div>
+
+    <script>
+        // DOM Elements
+        const inputFieldsContainer = document.getElementById('input-fields');
+        const solutionStepsContainer = document.getElementById('solution-steps');
+        const radioButtons = document.querySelectorAll('input[name="sideToCalculate"]');
+        const canvas = document.getElementById('triangleCanvas');
+        const ctx = canvas.getContext('2d');
+        const errorInputDiv = document.getElementById('error-message-input');
+        const errorCalculationDiv = document.getElementById('error-message-calculation');
+        const canvasMessage = document.getElementById('canvas-message');
+
+        // Initial state
+        let sideToCalculate = 'c'; // Default to hypotenuse
+        let values = { a: 3, b: 4, c: 5 }; // Default values
+
+        // --- Input Field Generation ---
+        function generateInputFields() {
+            inputFieldsContainer.innerHTML = ''; // Clear previous fields
+            errorInputDiv.textContent = ''; // Clear previous errors
+            errorCalculationDiv.textContent = ''; // Clear previous calculation errors
+            let fieldHtml = '';
+
+            if (sideToCalculate === 'c') {
+                fieldHtml = `
+                    <p class="text-sm text-gray-600 mb-3">Ingresa los valores de los catetos a y b:</p>
+                    <div>
+                        <label for="catetoA" class="block text-sm font-medium text-gray-700">Valor del cateto a:</label>
+                        <input type="number" id="catetoA" name="a" min="0.1" step="0.1" value="${values.a}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    </div>
+                    <div>
+                        <label for="catetoB" class="block text-sm font-medium text-gray-700">Valor del cateto b:</label>
+                        <input type="number" id="catetoB" name="b" min="0.1" step="0.1" value="${values.b}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    </div>
+                `;
+            } else if (sideToCalculate === 'a') {
+                fieldHtml = `
+                    <p class="text-sm text-gray-600 mb-3">Ingresa los valores de la hipotenusa c y el cateto b:</p>
+                     <div>
+                        <label for="catetoB" class="block text-sm font-medium text-gray-700">Valor del cateto b:</label>
+                        <input type="number" id="catetoB" name="b" min="0.1" step="0.1" value="${values.b}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    </div>
+                    <div>
+                        <label for="hipotenusaC" class="block text-sm font-medium text-gray-700">Valor de la hipotenusa c:</label>
+                        <input type="number" id="hipotenusaC" name="c" min="0.1" step="0.1" value="${values.c}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    </div>
+                `;
+            } else { // sideToCalculate === 'b'
+                fieldHtml = `
+                    <p class="text-sm text-gray-600 mb-3">Ingresa los valores de la hipotenusa c y el cateto a:</p>
+                     <div>
+                        <label for="catetoA" class="block text-sm font-medium text-gray-700">Valor del cateto a:</label>
+                        <input type="number" id="catetoA" name="a" min="0.1" step="0.1" value="${values.a}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    </div>
+                    <div>
+                        <label for="hipotenusaC" class="block text-sm font-medium text-gray-700">Valor de la hipotenusa c:</label>
+                        <input type="number" id="hipotenusaC" name="c" min="0.1" step="0.1" value="${values.c}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    </div>
+                `;
+            }
+            inputFieldsContainer.innerHTML = fieldHtml;
+            addInputListeners(); // Add listeners to the newly created inputs
+            updateCalculationAndDrawing(); // Perform initial calculation/draw
+        }
+
+        // --- Event Listeners ---
+        radioButtons.forEach(radio => {
+            radio.addEventListener('change', (event) => {
+                sideToCalculate = event.target.value;
+                // Reset values to defaults when changing mode to avoid invalid states
+                values = { a: 3, b: 4, c: 5 };
+                generateInputFields();
+            });
+        });
+
+        function addInputListeners() {
+            const numberInputs = inputFieldsContainer.querySelectorAll('input[type="number"]');
+            numberInputs.forEach(input => {
+                input.addEventListener('input', handleInputChange);
+            });
+        }
+
+        function handleInputChange(event) {
+            const inputName = event.target.name;
+            const inputValue = parseFloat(event.target.value);
+
+            // Basic validation for positive numbers
+            if (isNaN(inputValue) || inputValue <= 0) {
+                 errorInputDiv.textContent = 'Por favor, ingresa un valor numérico positivo.';
+                 // Optionally disable calculation/drawing or show default
+                 clearSolution();
+                 drawTriangle(3, 4, 5, sideToCalculate, true); // Draw default triangle
+                 return;
+            } else {
+                 errorInputDiv.textContent = ''; // Clear error
+            }
+
+             // Update the corresponding value
+            values[inputName] = inputValue;
+
+            // Perform validation specific to calculating cathetus
+            if (sideToCalculate === 'a') {
+                const b_val = parseFloat(document.getElementById('catetoB')?.value) || 0;
+                const c_val = parseFloat(document.getElementById('hipotenusaC')?.value) || 0;
+                 if (c_val <= b_val) {
+                     errorInputDiv.textContent = 'Error: La hipotenusa (c) debe ser mayor que el cateto (b).';
+                     clearSolution();
+                     drawTriangle(3, 4, 5, sideToCalculate, true); // Draw default triangle
+                     return; // Stop further processing
+                 } else {
+                     errorInputDiv.textContent = ''; // Clear error if valid
+                 }
+            } else if (sideToCalculate === 'b') {
+                const a_val = parseFloat(document.getElementById('catetoA')?.value) || 0;
+                const c_val = parseFloat(document.getElementById('hipotenusaC')?.value) || 0;
+                 if (c_val <= a_val) {
+                     errorInputDiv.textContent = 'Error: La hipotenusa (c) debe ser mayor que el cateto (a).';
+                     clearSolution();
+                     drawTriangle(3, 4, 5, sideToCalculate, true); // Draw default triangle
+                     return; // Stop further processing
+                 } else {
+                     errorInputDiv.textContent = ''; // Clear error if valid
+                 }
+            }
+
+
+            updateCalculationAndDrawing();
+        }
+
+        // --- Calculation Logic ---
+        function updateCalculationAndDrawing() {
+            errorCalculationDiv.textContent = ''; // Clear previous calculation errors
+            let a, b, c;
+            let calculationPossible = true;
+
+            try {
+                if (sideToCalculate === 'c') {
+                    a = parseFloat(document.getElementById('catetoA').value);
+                    b = parseFloat(document.getElementById('catetoB').value);
+                    if (isNaN(a) || isNaN(b) || a <= 0 || b <= 0) throw new Error("Valores inválidos para a o b.");
+                    c = Math.sqrt(a*a + b*b);
+                    values = { a, b, c };
+                    displaySolutionC(a, b, c);
+                } else if (sideToCalculate === 'a') {
+                    b = parseFloat(document.getElementById('catetoB').value);
+                    c = parseFloat(document.getElementById('hipotenusaC').value);
+                    if (isNaN(b) || isNaN(c) || b <= 0 || c <= 0) throw new Error("Valores inválidos para b o c.");
+                    if (c <= b) {
+                        calculationPossible = false;
+                        throw new Error("La hipotenusa (c) debe ser mayor que el cateto (b).");
+                    }
+                    a = Math.sqrt(c*c - b*b);
+                     if (isNaN(a)) throw new Error("Cálculo inválido (raíz negativa).");
+                    values = { a, b, c };
+                    displaySolutionA(a, b, c);
+                } else { // sideToCalculate === 'b'
+                    a = parseFloat(document.getElementById('catetoA').value);
+                    c = parseFloat(document.getElementById('hipotenusaC').value);
+                    if (isNaN(a) || isNaN(c) || a <= 0 || c <= 0) throw new Error("Valores inválidos para a o c.");
+                     if (c <= a) {
+                        calculationPossible = false;
+                        throw new Error("La hipotenusa (c) debe ser mayor que el cateto (a).");
+                    }
+                    b = Math.sqrt(c*c - a*a);
+                    if (isNaN(b)) throw new Error("Cálculo inválido (raíz negativa).");
+                    values = { a, b, c };
+                    displaySolutionB(a, b, c);
+                }
+
+                // Only draw if calculation was possible
+                 if (calculationPossible) {
+                    drawTriangle(values.a, values.b, values.c, sideToCalculate);
+                 }
+
+
+            } catch (error) {
+                 errorCalculationDiv.textContent = `⚠️ Error: ${error.message}`;
+                 clearSolution(true); // Clear solution but keep title
+                 // Draw a default/placeholder triangle if calculation fails due to invalid input relation
+                 if (!calculationPossible) {
+                     drawTriangle(3, 4, 5, sideToCalculate, true); // Draw default on validation error
+                 }
+            }
+        }
+
+        function clearSolution(keepTitle = false) {
+            if (keepTitle) {
+                 const title = solutionStepsContainer.querySelector('h3');
+                 solutionStepsContainer.innerHTML = title ? title.outerHTML : '';
+            } else {
+                solutionStepsContainer.innerHTML = '<p class="text-gray-500">Selecciona qué lado calcular e ingresa los valores conocidos.</p>';
+            }
+             // Clear MathJax rendering cache if needed (might not be necessary)
+            if (window.MathJax && MathJax.typeset) {
+                 MathJax.typesetClear([solutionStepsContainer]);
+            }
+        }
+
+
+        // --- Display Solution Steps ---
+        function displaySolutionC(a, b, c) {
+            solutionStepsContainer.innerHTML = `
+                <h3 class="font-semibold text-md mb-2 text-blue-700">Calcular la hipotenusa (c):</h3>
+                <p>1. Según el teorema de Pitágoras: $c^2 = a^2 + b^2$</p>
+                <p>2. Sustituimos los valores conocidos: $c^2 = ${a}^2 + ${b}^2$</p>
+                <p>3. Calculamos los cuadrados: $c^2 = ${formatNumber(a*a)} + ${formatNumber(b*b)}$</p>
+                <p>4. Sumamos: $c^2 = ${formatNumber(a*a + b*b)}$</p>
+                <p>5. Aplicamos raíz cuadrada: $c = \\sqrt{${formatNumber(a*a + b*b)}}$</p>
+                <p>6. Resultado: <strong class="calculated-value">$c = ${formatNumber(c)}$</strong></p>
+            `;
+            MathJax.typesetPromise([solutionStepsContainer]); // Re-render LaTeX
+        }
+
+        function displaySolutionA(a, b, c) {
+            solutionStepsContainer.innerHTML = `
+                <h3 class="font-semibold text-md mb-2 text-blue-700">Calcular el cateto (a):</h3>
+                <p>1. Según el teorema de Pitágoras: $a^2 + b^2 = c^2$</p>
+                <p>2. Despejamos $a^2$: $a^2 = c^2 - b^2$</p>
+                <p>3. Sustituimos los valores conocidos: $a^2 = ${c}^2 - ${b}^2$</p>
+                <p>4. Calculamos los cuadrados: $a^2 = ${formatNumber(c*c)} - ${formatNumber(b*b)}$</p>
+                <p>5. Restamos: $a^2 = ${formatNumber(c*c - b*b)}$</p>
+                <p>6. Aplicamos raíz cuadrada: $a = \\sqrt{${formatNumber(c*c - b*b)}}$</p>
+                <p>7. Resultado: <strong class="calculated-value">$a = ${formatNumber(a)}$</strong></p>
+            `;
+             MathJax.typesetPromise([solutionStepsContainer]); // Re-render LaTeX
+        }
+
+        function displaySolutionB(a, b, c) {
+            solutionStepsContainer.innerHTML = `
+                <h3 class="font-semibold text-md mb-2 text-blue-700">Calcular el cateto (b):</h3>
+                <p>1. Según el teorema de Pitágoras: $a^2 + b^2 = c^2$</p>
+                <p>2. Despejamos $b^2$: $b^2 = c^2 - a^2$</p>
+                <p>3. Sustituimos los valores conocidos: $b^2 = ${c}^2 - ${a}^2$</p>
+                <p>4. Calculamos los cuadrados: $b^2 = ${formatNumber(c*c)} - ${formatNumber(a*a)}$</p>
+                <p>5. Restamos: $b^2 = ${formatNumber(c*c - a*a)}$</p>
+                <p>6. Aplicamos raíz cuadrada: $b = \\sqrt{${formatNumber(c*c - a*a)}}$</p>
+                <p>7. Resultado: <strong class="calculated-value">$b = ${formatNumber(b)}$</strong></p>
+            `;
+             MathJax.typesetPromise([solutionStepsContainer]); // Re-render LaTeX
+        }
+
+         // Helper to format numbers to max 2 decimal places
+        function formatNumber(num) {
+            return Number(num.toFixed(2));
+        }
+
+        // --- Canvas Drawing ---
+        function drawTriangle(a, b, c, sideToCalc, isPlaceholder = false) {
+            const canvasWidth = canvas.width;
+            const canvasHeight = canvas.height;
+            const padding = 40; // Padding around the triangle
+            const availableWidth = canvasWidth - 2 * padding;
+            const availableHeight = canvasHeight - 2 * padding;
+
+            // Clear canvas
+            ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+
+             // Display message if it's a placeholder
+            canvasMessage.textContent = isPlaceholder ? 'Mostrando triángulo de ejemplo debido a valores inválidos.' : '';
+
+
+            // Determine scale factor to fit the triangle
+            const scaleX = availableWidth / a;
+            const scaleY = availableHeight / b;
+            const scale = Math.min(scaleX, scaleY) * 0.9; // Use 90% of available space
+
+            const scaledA = a * scale;
+            const scaledB = b * scale;
+
+            // Calculate coordinates, drawing from bottom-left corner upwards
+            const x0 = padding;
+            const y0 = canvasHeight - padding; // Bottom-left
+            const x1 = x0 + scaledA;
+            const y1 = y0;             // Bottom-right
+            const x2 = x0;
+            const y2 = y0 - scaledB; // Top-left
+
+            // Draw triangle sides
+            ctx.beginPath();
+            ctx.moveTo(x0, y0);
+            ctx.lineTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.closePath();
+            ctx.strokeStyle = '#3b82f6'; // blue-500
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Draw right angle symbol
+            const angleSize = Math.min(scaledA, scaledB) * 0.15; // Size relative to sides
+            ctx.strokeStyle = '#374151'; // gray-700
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(x0 + angleSize, y0);
+            ctx.lineTo(x0 + angleSize, y0 - angleSize);
+            ctx.lineTo(x0, y0 - angleSize);
+            ctx.stroke();
+
+            // Draw labels
+            ctx.fillStyle = '#1f2937'; // gray-800
+            ctx.font = '12px Inter';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+            // Label 'a' (bottom side)
+            ctx.fillStyle = (sideToCalc === 'a' && !isPlaceholder) ? '#ef4444' : '#1f2937'; // red-500 if calculating 'a'
+            const labelA = (sideToCalc === 'a' && !isPlaceholder) ? 'a = ?' : `a = ${formatNumber(a)}`;
+            ctx.fillText(labelA, x0 + scaledA / 2, y0 + 15);
+
+            // Label 'b' (left side)
+            ctx.fillStyle = (sideToCalc === 'b' && !isPlaceholder) ? '#ef4444' : '#1f2937'; // red-500 if calculating 'b'
+            const labelB = (sideToCalc === 'b' && !isPlaceholder) ? 'b = ?' : `b = ${formatNumber(b)}`;
+            ctx.save(); // Save context state
+            ctx.translate(x0 - 15, y0 - scaledB / 2);
+            ctx.rotate(-Math.PI / 2); // Rotate text 90 degrees counter-clockwise
+            ctx.textAlign = 'center';
+            ctx.fillText(labelB, 0, 0);
+            ctx.restore(); // Restore context state
+
+            // Label 'c' (hypotenuse)
+             ctx.fillStyle = (sideToCalc === 'c' && !isPlaceholder) ? '#ef4444' : '#1f2937'; // red-500 if calculating 'c'
+            const labelC = (sideToCalc === 'c' && !isPlaceholder) ? 'c = ?' : `c = ${formatNumber(c)}`;
+            const midHypX = (x1 + x2) / 2;
+            const midHypY = (y1 + y2) / 2;
+            const angleRad = Math.atan2(y2 - y1, x2 - x1); // Angle of hypotenuse
+            ctx.save();
+            ctx.translate(midHypX + 10 * Math.sin(angleRad), midHypY - 10 * Math.cos(angleRad)); // Offset perpendicular
+            ctx.rotate(angleRad);
+            ctx.textAlign = 'center';
+            ctx.fillText(labelC, 0, 0);
+            ctx.restore();
+        }
+
+        // --- Initial Setup ---
+        generateInputFields(); // Generate initial fields for 'c'
+        // Initial draw is handled within generateInputFields -> updateCalculationAndDrawing
+
+    </script>
+
+</body>
+</html>
